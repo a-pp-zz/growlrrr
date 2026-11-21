@@ -1,0 +1,23 @@
+{
+    "name": "appzz/growlrrr",
+    "description": "CLI utils",
+    "type": "wrapper",
+    "keywords": [
+        "cli utils wrapper growlrrr"
+    ],
+    "homepage": "https://github.com/a-pp-zz/growlrrr",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CoolSwitcher",
+            "email": "ds@appzz.pw",
+            "role": "lead"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {"AppZz\\CLI\\": "src/"}
+    }
+}
