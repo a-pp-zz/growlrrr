@@ -32,31 +32,20 @@ class Growlrrr {
 
     public static function factory ($bin = '') : Object
     {
-        return new Notifier ();
-    }
-
-    /**
-     * Set params avoid setters
-     * @param  array  $params
-     * @return $this
-     */
-    public function params (array $params = []) : Object
-    {
-        $this->_params = $params;
-        return $this;
+        return new Growlrrr ();
     }
 
     public function register ($icon, $bundle) : bool
     {
         $cmd = "%s apps add --appId %s --appIcon %s";
-        system (sprintf ($this->_bin, $bundle, $icon), $retval);
+        system (sprintf ($cmd, $this->_bin, $bundle, $icon), $retval);
         return ($retval === 0);
     }
 
     public function unregister ($bundle) : bool
     {
-        $cmd = "%s apps remove --appId %s --force";
-        system (sprintf ($this->_bin, $bundle, $icon), $retval);
+        $cmd = "%s apps remove %s --force";
+        system (sprintf ($cmd, $this->_bin, $bundle), $retval);
         return ($retval === 0);
     }
 
@@ -72,6 +61,14 @@ class Growlrrr {
             case 'thread':
                 $method = 'threadId';
             break;
+            case 'bundle':
+                $method = 'appId';
+            break;
+            case 'open':
+                if ( ! preg_match('#^https?\:\/\/.*#iu', $value)) {
+                    throw new \InvalidArgumentException ('Wrong Url!');
+                }
+            break;
         }
 
         $this->_params[$method] = $value;
@@ -84,7 +81,10 @@ class Growlrrr {
         $cmd = $this->_bin;
 
         $message = Arr::get ($this->_params, 'message', '');
-        unset ($this->_params['message']);
+
+        if ($message) {
+            unset ($this->_params['message']);
+        }
 
         foreach ($this->_params as $key => $value) {
             $cmd .= sprintf (' --%s %s', $key, (! empty ($value) ? escapeshellarg($value) : ''));
